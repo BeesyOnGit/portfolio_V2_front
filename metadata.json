@@ -1,0 +1,5 @@
+{
+  "name": "React Dual-UI Portfolio",
+  "description": "A personal portfolio that runs in two modes: a Linux terminal-style interface (CLI) and a classic website UI. Users can choose their preferred mode on first visit and switch at any time.",
+  "requestFramePermissions": []
+}
