@@ -6,7 +6,6 @@ import { siteData as initialSiteData } from '../data/site';
 import { experienceData as initialExperienceData } from '../data/experience';
 import { projectsData as initialProjectsData } from '../data/projects';
 
-
 export type Mode = 'terminal' | 'classic';
 export type Theme = 'light' | 'dark';
 export type Page = 'home' | 'experience' | 'projects' | 'contact';
@@ -21,8 +20,6 @@ interface AppContextType {
   toggleTheme: () => void;
   
   // Admin Dashboard State
-  isDashboardVisible: boolean;
-  setDashboardVisible: (visible: boolean) => void;
   isAuthenticated: boolean;
   login: (password: string) => boolean;
   logout: () => void;
@@ -56,7 +53,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Admin and data state
-  const [isDashboardVisible, setDashboardVisible] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [siteData, setSiteDataState] = useState<SiteData>(() => getStoredData('portfolio-siteData', initialSiteData));
   const [experienceData, setExperienceDataState] = useState<Experience[]>(() => getStoredData('portfolio-experienceData', initialExperienceData));
@@ -132,7 +128,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const logout = useCallback(() => {
     setIsAuthenticated(false);
-    setDashboardVisible(false);
     sessionStorage.removeItem('portfolio-auth');
   }, []);
 
@@ -148,8 +143,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setTheme,
     setCurrentPage,
     toggleTheme,
-    isDashboardVisible,
-    setDashboardVisible,
     isAuthenticated,
     login,
     logout,

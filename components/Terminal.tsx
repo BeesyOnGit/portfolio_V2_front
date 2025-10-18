@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../hooks/useAppContext';
+import { useNavigation } from '../hooks/useNavigation';
 import type { Page } from '../contexts/AppContext';
 
 const PROMPT_BASE = `[<span class="text-dark-green">{user}@portfolio</span> <span class="text-dark-blue">~</span>]$`;
@@ -10,12 +12,13 @@ const Help: React.FC = () => (
         <ul className="space-y-1">
             <li><span className="text-dark-yellow w-32 inline-block">help</span> Show this help message.</li>
             <li><span className="text-dark-yellow w-32 inline-block">whoami</span> Display my bio.</li>
+            <li><span className="text-dark-yellow w-32 inline-block">home</span> Navigate to home.</li>
             <li><span className="text-dark-yellow w-32 inline-block">experience</span> Show my work experience.</li>
             <li><span className="text-dark-yellow w-32 inline-block">projects</span> List all projects.</li>
             <li><span className="text-dark-yellow w-32 inline-block">project &lt;id&gt;</span> Show project details.</li>
             <li><span className="text-dark-yellow w-32 inline-block">contact</span> Display contact information.</li>
             <li><span className="text-dark-yellow w-32 inline-block">theme &lt;light|dark&gt;</span> Switch color theme.</li>
-            <li><span className="text-dark-yellow w-32 inline-block">mode classic</span> Switch to classic UI. To return, click the terminal icon in the header.</li>
+            <li><span className="text-dark-yellow w-32 inline-block">mode classic</span> Switch to classic UI.</li>
             <li><span className="text-dark-yellow w-32 inline-block">login</span> Access the admin dashboard.</li>
             <li><span className="text-dark-yellow w-32 inline-block">clear</span> Clear the terminal screen.</li>
             <li><span className="text-dark-yellow w-32 inline-block">date</span> Show the current date.</li>
@@ -78,7 +81,8 @@ const renderPage = (page: Page, contextData: any) => {
 };
 
 const Terminal: React.FC = () => {
-    const { setMode, setTheme, setDashboardVisible, siteData, experienceData, projectsData } = useAppContext();
+    const { setTheme, siteData, experienceData, projectsData } = useAppContext();
+    const { navigateToMode, navigateToAdmin } = useNavigation();
     const [input, setInput] = useState('');
     const [history, setHistory] = useState<string[]>([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
@@ -89,6 +93,8 @@ const Terminal: React.FC = () => {
     ]);
     const inputRef = useRef<HTMLInputElement>(null);
     const endOfTerminalRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const PROMPT = PROMPT_BASE.replace('{user}', siteData.name.toLowerCase().replace(/\s/g, '-'));
 
@@ -104,12 +110,17 @@ const Terminal: React.FC = () => {
             case 'whoami':
             case 'home':
                 newOutput = renderPage('home', contextData);
+                if (command === 'home') {
+                    navigate('/terminal/home', { replace: true });
+                }
                 break;
             case 'experience':
                 newOutput = renderPage('experience', contextData);
+                navigate('/terminal/experience', { replace: true });
                 break;
             case 'projects':
                 newOutput = renderPage('projects', contextData);
+                navigate('/terminal/projects', { replace: true });
                 break;
             case 'project':
                 const project = projectsData.find(p => p.id === args[0]);
@@ -127,6 +138,7 @@ const Terminal: React.FC = () => {
                 break;
             case 'contact':
                 newOutput = renderPage('contact', contextData);
+                navigate('/terminal/contact', { replace: true });
                 break;
             case 'theme':
                 if (args[0] === 'light' || args[0] === 'dark') {
@@ -138,13 +150,13 @@ const Terminal: React.FC = () => {
                 break;
             case 'mode':
                 if (args[0] === 'classic') {
-                    setMode('classic');
+                    navigateToMode('classic');
                 } else {
                     newOutput = <p className="text-dark-red">Invalid mode. Use 'classic'.</p>;
                 }
                 break;
             case 'login':
-                setDashboardVisible(true);
+                navigateToAdmin();
                 return;
             case 'clear':
                 setOutput([]);
@@ -158,15 +170,17 @@ const Terminal: React.FC = () => {
                 newOutput = <p>Command not found: {command}. Type 'help' for a list of commands.</p>;
         }
 
-        setOutput(prev => [
-            ...prev,
-            <div key={prev.length}>
-                <span dangerouslySetInnerHTML={{ __html: PROMPT }} />
-                <span> {cmd}</span>
-            </div>,
-            ...(newOutput ? [<div key={prev.length + 0.5}>{newOutput}</div>] : [])
-        ]);
-    }, [setMode, setTheme, setDashboardVisible, siteData, experienceData, projectsData, PROMPT]);
+        if (newOutput) {
+            setOutput(prev => [
+                ...prev,
+                <div key={prev.length}>
+                    <span dangerouslySetInnerHTML={{ __html: PROMPT }} />
+                    <span> {cmd}</span>
+                </div>,
+                <div key={prev.length + 0.5}>{newOutput}</div>
+            ]);
+        }
+    }, [PROMPT, siteData, experienceData, projectsData, navigate]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

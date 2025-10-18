@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAppContext } from '../hooks/useAppContext';
 import Header from './Header';
 import Footer from './Footer';
@@ -9,28 +10,18 @@ import Projects from '../pages/Projects';
 import Contact from '../pages/Contact';
 
 const ClassicLayout: React.FC = () => {
-  const { currentPage } = useAppContext();
-
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return <Home />;
-      case 'experience':
-        return <Experience />;
-      case 'projects':
-        return <Projects />;
-      case 'contact':
-        return <Contact />;
-      default:
-        return <Home />;
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {renderCurrentPage()}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/experience" element={<Experience />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<Navigate to="/classic" replace />} />
+        </Routes>
       </main>
       <Footer />
     </div>

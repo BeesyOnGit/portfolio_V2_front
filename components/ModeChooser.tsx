@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { useAppContext } from '../hooks/useAppContext';
+import { useNavigation } from '../hooks/useNavigation';
 
 const ModeChooser: React.FC = () => {
-  const { setMode } = useAppContext();
+  const { navigateToMode } = useNavigation();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-dark-bg">
@@ -14,13 +14,13 @@ const ModeChooser: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <button
-            onClick={() => setMode('terminal')}
+            onClick={() => navigateToMode('terminal')}
             className="flex-1 bg-gray-800 hover:bg-black dark:bg-dark-bg dark:hover:bg-black text-white font-mono py-3 px-6 rounded-md transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-dark-blue"
           >
             <span className="text-dark-green">$ </span>Terminal Mode
           </button>
           <button
-            onClick={() => setMode('classic')}
+            onClick={() => navigateToMode('classic')}
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-400"
           >
             Classic UI

@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../hooks/useAppContext';
 
 const Login: React.FC = () => {
-  const { login, setDashboardVisible } = useAppContext();
+  const { login } = useAppContext();
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     if (login(password)) {
-      // Login successful, the App component will handle showing the dashboard
+      // Login successful - stay on admin page
     } else {
       setError('Invalid password. Please try again.');
     }
@@ -59,7 +61,7 @@ const Login: React.FC = () => {
             </button>
           </div>
            <div className="text-center mt-4">
-              <button onClick={() => setDashboardVisible(false)} className="text-sm text-gray-500 hover:underline">
+              <button onClick={() => navigate('/')} className="text-sm text-gray-500 hover:underline">
                 Back to Portfolio
               </button>
             </div>

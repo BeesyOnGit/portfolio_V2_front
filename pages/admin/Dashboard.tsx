@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../hooks/useAppContext';
 import InfoEditor from '../../components/admin/InfoEditor';
 import ExperienceEditor from '../../components/admin/ExperienceEditor';
@@ -9,6 +10,12 @@ type AdminPage = 'info' | 'experience' | 'projects';
 const Dashboard: React.FC = () => {
     const { logout, siteData } = useAppContext();
     const [activePage, setActivePage] = useState<AdminPage>('info');
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
 
     const renderContent = () => {
         switch (activePage) {
@@ -44,9 +51,15 @@ const Dashboard: React.FC = () => {
                     <NavItem page="experience">Experience</NavItem>
                     <NavItem page="projects">Projects</NavItem>
                 </nav>
-                <div className="mt-auto">
+                <div className="mt-auto space-y-2">
                     <button
-                        onClick={logout}
+                        onClick={() => navigate('/')}
+                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        Back to Portfolio
+                    </button>
+                    <button
+                        onClick={handleLogout}
                         className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                     >
                         Logout
