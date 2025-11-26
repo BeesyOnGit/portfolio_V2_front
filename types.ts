@@ -2,6 +2,7 @@
 import React from "react";
 
 export type SiteData = {
+    id?: string;
     name: string;
     title: string;
     bio: string[];
@@ -16,19 +17,23 @@ export type SiteData = {
 };
 
 export type Experience = {
+    id?: string;
     role: string;
     company: string;
-    startPeriod: string;
-    endPeriod: string;
+    start_period: string;
+    end_period: string;
     description: string[];
     achievements: string[];
+    technologies?: Technology[];
+    technology_ids?: string[];
 };
 
 export type Project = {
-    id: string;
+    id?: string;
     name: string;
     description: string;
     tech: Technology[];
+    technology_ids?: string[];
     demo?: string;
     repo?: string;
     year?: number;

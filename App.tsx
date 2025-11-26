@@ -8,7 +8,7 @@ import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 
 const App: React.FC = () => {
-  const { mode, isAuthenticated } = useAppContext();
+  const { isAuthenticated } = useAppContext();
 
   return (
     <div className="bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-fg min-h-screen font-sans transition-colors duration-300">
@@ -22,12 +22,8 @@ const App: React.FC = () => {
         {/* Classic mode routes */}
         <Route path="/classic/*" element={<ClassicLayout />} />
         
-        {/* Root route */}
-        <Route path="/" element={
-          mode === null ? <ModeChooser /> : 
-          mode === 'terminal' ? <Navigate to="/terminal" replace /> :
-          <Navigate to="/classic" replace />
-        } />
+        {/* Root route - Always show mode chooser */}
+        <Route path="/" element={<ModeChooser />} />
         
         {/* Catch all - redirect to root */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,8 +1,17 @@
 import React from 'react';
 import { useAppContext } from '../hooks/useAppContext';
+import { SkeletonHome } from '../components/skeletons/SkeletonHome';
 
 const Home: React.FC = () => {
-  const { setCurrentPage, siteData } = useAppContext();
+  const { setCurrentPage, siteData, isLoadingSite } = useAppContext();
+
+  if (isLoadingSite) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center py-12">
+        <SkeletonHome />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center text-center py-12">

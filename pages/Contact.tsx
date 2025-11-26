@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAppContext } from '../hooks/useAppContext';
 import { GithubIcon, LinkedinIcon, MailIcon } from '../components/icons/SocialIcons';
+import { SkeletonHome } from '../components/skeletons/SkeletonHome';
 
 
 const Contact: React.FC = () => {
-  const { siteData } = useAppContext();
+  const { siteData, isLoadingSite } = useAppContext();
 
   // A simple map to retrieve the correct icon component
   const iconMap: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
@@ -12,6 +13,14 @@ const Contact: React.FC = () => {
     LinkedIn: LinkedinIcon,
     Email: MailIcon,
   };
+
+  if (isLoadingSite) {
+    return (
+      <div className="max-w-lg mx-auto text-center">
+        <SkeletonHome />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-lg mx-auto text-center">
